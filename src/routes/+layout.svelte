@@ -1,17 +1,22 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
-
+	
 	let { children } = $props();
+	let searchQuery = $state("")
 	let postModal: HTMLDialogElement | undefined = $state();
+
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+	<link rel="icon" href={favicon} />
+</svelte:head>
 
 
 
-<nav class="navbar bg-base-100 shadow-sm">
-	<a class="btn btn-ghost text-xl" href="/">hi</a>
+<nav class="navbar shadow-sm justify-between">
+	<a class="btn btn-ghost text-xl" href="/">recommender</a>
+	<input type="search" class="input input-primary" placeholder="Search posts" />
 </nav>
 
 <div class="fab">
@@ -25,14 +30,23 @@
 			<select class="select w-full">
 				<option disabled selected>What are you recommending?</option>
 				<option>A movie</option>
-				<option>An album</option>
+				<!--<option>An album</option>
 				<option>A TV show</option>
-				<option>A book</option>
+				<option>A book</option>-->
 			</select>
-			<input type="text" placeholder="Title" class="input w-full">
+			<div class="flex flex-row gap-2">
+				<input type="text" placeholder="Search a title" class="input w-full" bind:value={searchQuery}>
+				{#if !searchQuery}
+					<button class="btn btn-disabled" >Search</button>
+					{:else if searchQuery}
+					<button class="btn btn-disabled" >Search</button>
+				{:else}
+				{/if}
+				
+			</div>
+			
 			
 			<textarea class="textarea textarea-bordered w-full" placeholder="Write a recommendation"></textarea>
-		
 		</div>
 		
 		
