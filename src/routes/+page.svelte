@@ -1,43 +1,54 @@
-<script>
+<script lang="ts">
+	let { data } = $props();
+	console.log(data.posts);
+	let selectedPost = $state(null);
+	let contentModal: HTMLDialogElement | undefined = $state();
+
+	function openContentModal(post) {
+		selectedPost = post;
+		contentModal?.showModal();
+	}
 </script>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3 gap-4 p-4 ">
-	
-	<div class="card card-side bg-base-100 shadow-sm h-64">
-		<figure class="h-full w-auto shrink-0 p-4 ">
-			<img
-					src="https://www.themoviedb.org/t/p/w600_and_h900_face/63N9uy8nd9j7Eog2axPQ8lbr3Wj.jpg"
+<div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3">
+	{#each data.posts as post}
+		<div class="card card-side h-64 bg-base-100 shadow-sm">
+			<figure class="h-full w-auto shrink-0 p-4">
+				<img
+					src={post.image_link}
 					alt="Movie Poster"
-					class="h-full w-full object-cover rounded-md"
-			/>
-		</figure>
-		<div class="card-body overflow-hidden">
-				<h2 class="card-title">Blade Runner</h2>
-				<p class="line-clamp-6 overflow-hidden">Test test test teeeest</p>
-			<div class="card-actions justify-end">
-				<button class="btn btn-primary">Listen</button>
+					class="h-full w-full rounded-md object-cover"
+				/>
+			</figure>
+			<div class="card-body overflow-hidden">
+				<h2 class="card-title">{post.title}</h2>
+				<p class="line-clamp-6 overflow-hidden">{post.description}</p>
+				<div class="card-actions justify-end">
+					<p class="mt-auto text-xs italic">({post.type})</p>
+					<button
+						class="btn btn-primary"
+						onclick={() => {
+							openContentModal(post);
+						}}>Open</button
+					>
+				</div>
 			</div>
 		</div>
-	</div>
-	
-	<div class="card card-side bg-base-100 shadow-sm h-64 overflow-hidden">
-		<figure class="h-full w-auto shrink-0 p-4">
-			<img
-					src="https://upload.wikimedia.org/wikipedia/en/5/51/Kendrick_Lamar_-_Damn.png"
-					alt="Movie Poster"
-					class="h-full w-full object-cover rounded-md"
-			/>
-		</figure>
-		<div class="card-body overflow-hidden ">
+	{/each}
 
-				<h2 class="card-title">DAMN</h2>
-				<p class="wrap-normal line-clamp-4">afddfasdfsd faf fad </p>
-
-			<div class="card-actions justify-end">
-				<button class="btn btn-primary">Listen</button>
+	<dialog bind:this={contentModal} class="modal">
+		<div class="modal-box">
+			{#if selectedPost}
+				<div class="flex flex-col gap-4">
+					<h3 class="text-lg font-bold">{selectedPost.title}</h3>
+					<p>{selectedPost.description}</p>
+				</div>
+			{/if}
+			<div class="modal-action">
+				<form method="dialog">
+					<button class="btn btn-neutral">Close</button>
+				</form>
 			</div>
 		</div>
-	</div>
-	
-
+	</dialog>
 </div>
