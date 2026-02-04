@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { Post} from "$lib/types";
-	
+	import type { Post } from '$lib/types';
+
 	let { data } = $props();
 	let selectedPost = $state<Post | null>(null);
 	let contentModal: HTMLDialogElement | undefined = $state();
-	
+
 	function openContentModal(post: Post) {
 		selectedPost = post;
 		contentModal?.showModal();
@@ -13,11 +13,11 @@
 
 {#snippet moviePost(post: post)}
 	<div class="card card-side h-64 bg-base-100 shadow-sm">
-		<figure class="h-full  shrink-0 p-4">
+		<figure class="h-full shrink-0 p-4">
 			<img
-					src={post.image_link}
-					alt="Movie Poster"
-					class="h-full w-full rounded-md object-cover aspect-2/3"
+				src={post.image_link}
+				alt="Movie Poster"
+				class="aspect-2/3 h-full w-full rounded-md object-cover"
 			/>
 		</figure>
 		<div class="card-body overflow-hidden">
@@ -26,10 +26,10 @@
 			<div class="card-actions justify-end">
 				<p class="mt-auto text-xs italic">({post.type})</p>
 				<button
-						class="btn btn-primary"
-						onclick={() => {
-							openContentModal(post);
-						}}>Open</button
+					class="btn btn-primary"
+					onclick={() => {
+						openContentModal(post);
+					}}>Open</button
 				>
 			</div>
 		</div>
@@ -42,7 +42,7 @@
 	{/each}
 
 	<dialog bind:this={contentModal} class="modal">
-		<div class="modal-box max-w-[80vh] max-h-[80vh]">
+		<div class="modal-box max-h-[80vh] max-w-[80vh]">
 			{#if selectedPost}
 				<div class="flex flex-col gap-4 overflow-scroll">
 					<h3 class="text-lg font-bold">Recommendation for {selectedPost.title}</h3>
