@@ -66,7 +66,7 @@
 </svelte:head>
 
 <nav class="navbar justify-between shadow-sm">
-	<a class="btn text-xl btn-ghost" href="/">recommender</a>
+	<a class="btn text-xl btn-ghost" href="/">Recommender</a>
 	<input type="search" class="input input-primary" placeholder="Search posts" />
 </nav>
 
