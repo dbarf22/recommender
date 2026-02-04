@@ -2,7 +2,8 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import type { result, Post } from '$lib/types';
-
+	import { invalidateAll} from "$app/navigation";
+	
 	let { children } = $props();
 	let searchQuery = $state('');
 	let searchResults: result[] = $state([]);
@@ -40,8 +41,10 @@
 			}
 			searchQuery = ''
 			postModal?.close();
+			return true;
 		} else {
 			alert("Error posting")
+			return false;
 		}
 	}
 	
@@ -142,7 +145,12 @@
 				<button class="btn btn-neutral">Cancel</button>
 			</form>
 
-			<button class="btn btn-primary" onclick="{() => {handlePost()}}">Submit</button>
+			<button class="btn btn-primary" onclick="{async () => {
+				const status = await handlePost();
+				if (status) {
+					await invalidateAll()
+				}
+			}}">Submit</button>
 		</div>
 	</div>
 </dialog>
