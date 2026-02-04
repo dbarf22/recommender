@@ -12,7 +12,6 @@
 </script>
 
 
-
 <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3">
 	{#each data.posts as post}
 		<div class="card card-side h-64 bg-base-100 shadow-sm">
@@ -40,10 +39,10 @@
 	{/each}
 
 	<dialog bind:this={contentModal} class="modal">
-		<div class="modal-box">
+		<div class="modal-box max-w-[80vh] max-h-[80vh]">
 			{#if selectedPost}
-				<div class="flex flex-col gap-4">
-					<h3 class="text-lg font-bold">{selectedPost.title}</h3>
+				<div class="flex flex-col gap-4 overflow-scroll">
+					<h3 class="text-lg font-bold">Recommendation for {selectedPost.title}</h3>
 					<p>{selectedPost.description}</p>
 				</div>
 			{/if}

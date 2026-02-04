@@ -1,17 +1,47 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
-	
+	import type { result, Post } from '$lib/types';
+
 	let { children } = $props();
-	let searchQuery = $state("")
-	let searchResults = $state([])
+	let searchQuery = $state('');
+	let searchResults: result[] = $state([]);
 	let postModal: HTMLDialogElement | undefined = $state();
 
-	async function search() {
-		const response = await fetch(`/api/movies?query=${encodeURIComponent(searchQuery)}`)
+	let post: Post = $state({
+		title: '',
+		description: '',
+		image_link: '',
+		type: 'movie'
+	});
+
+	async function tmdbSearch() {
+		const response = await fetch(`/api/movies?query=${encodeURIComponent(searchQuery)}`);
 		if (response.ok) {
-			console.log(`/api/movies?query=${encodeURIComponent(searchQuery)}`)
+			console.log(`/api/movies?query=${encodeURIComponent(searchQuery)}`);
 			searchResults = await response.json();
+		}
+	}
+	
+	async function handlePost() {
+		const response = await fetch('api/posts', {
+			method: 'POST',
+			body: JSON.stringify(post),
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		
+		if (response.ok) {
+			post = {
+				title: '',
+				description: '',
+				image_link: ''
+			}
+			searchQuery = ''
+			postModal?.close();
+		} else {
+			alert("Error posting")
 		}
 	}
 	
@@ -21,56 +51,99 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-
-
-<nav class="navbar shadow-sm justify-between">
-	<a class="btn btn-ghost text-xl" href="/">recommender</a>
+<nav class="navbar justify-between shadow-sm">
+	<a class="btn text-xl btn-ghost" href="/">recommender</a>
 	<input type="search" class="input input-primary" placeholder="Search posts" />
 </nav>
 
 <div class="fab">
-	<button class="btn btn-xl btn-circle btn-primary" onclick={() => {postModal?.showModal()}}>+</button>
+	<button
+		class="btn btn-circle btn-xl btn-primary"
+		onclick={() => {
+			postModal?.showModal();
+		}}>+</button
+	>
 </div>
 
 <dialog bind:this={postModal} class="modal">
 	<div class="modal-box">
-		<div class="flex flex-col gap-4">
+		<div class="flex min-h-[70vh] flex-col gap-4 xl:min-h-[60vh]">
 			<h3 class="text-lg font-bold">Enter a recommendation</h3>
-			<select class="select w-full">
+			<!--<select class="select w-full">
 				<option disabled selected>What are you recommending?</option>
 				<option>A movie</option>
-				<!--<option>An album</option>
+				&lt;!&ndash;<option>An album</option>
 				<option>A TV show</option>
-				<option>A book</option>-->
-			</select>
-			<div class="flex flex-row gap-2">
-					<input type="text" placeholder="Search a title" class="input w-full" bind:value={searchQuery}>
+				<option>A book</option>&ndash;&gt;
+			</select>-->
+			<div class="relative group">
+				<div class="flex flex-row gap-2">
+					<input
+						type="text"
+						placeholder="Search a title"
+						class="input w-full"
+						bind:value={searchQuery}
+					/>
 					{#if !searchQuery}
-						<button class="btn btn-disabled" >Search</button>
+						<button class="btn btn-disabled">Search</button>
 					{:else}
-						<button class="btn" onclick="{ () => {search()} }">Search</button>
+						<button
+							class="btn"
+							onclick={() => {
+								tmdbSearch();
+							}}>Search</button
+						>
 					{/if}
+				</div>
+				{#if searchResults.length > 0}
+					<ul
+						class="absolute z-50 m-1 max-h-60 w-full overflow-scroll
+						hidden group-focus-within:block rounded-md border bg-base-200 p-2 shadow-lg"
+					>
+						{#each searchResults as result}
+							{@const posterUrl = result.poster_path
+									? `https://image.tmdb.org/t/p/w500${result.poster_path}`
+									: 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg'}
+							<li>
+								<button
+									type="button"
+									class="flex min-w-full cursor-pointer flex-row items-center text-left hover:bg-base-300"
+									onclick={() => {
+										post.title = result.title;
+										post.image_link = 'https://image.tmdb.org/t/p/w500' + result.poster_path;
+										searchResults = [];
+										searchQuery = result.title;
+									}}
+								>
+									<img
+										src="{posterUrl}"
+										alt={result.title}
+										class="w-16 rounded-md p-2"
+									/>
+									{result.title}
+								</button>
+							</li>
+						{/each}
+					</ul>
+				{/if}
 			</div>
-			
-			
-			
-			
-			<textarea class="textarea textarea-bordered w-full" placeholder="Write a recommendation"></textarea>
+
+			<textarea
+				class="textarea-bordered textarea w-full grow"
+				placeholder="Write a recommendation"
+				bind:value={post.description}
+			></textarea>
 		</div>
-		
-		
+
 		<div class="modal-action">
 			<form method="dialog">
 				<!-- if there is a button in form, it will close the modal -->
 				<button class="btn btn-neutral">Cancel</button>
 			</form>
-			
-			<button class="btn btn-primary">Submit</button>
+
+			<button class="btn btn-primary" onclick="{() => {handlePost()}}">Submit</button>
 		</div>
 	</div>
-	
-	
 </dialog>
-
 
 {@render children()}

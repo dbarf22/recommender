@@ -10,10 +10,10 @@ export const GET: RequestHandler = async ({ url }) => {
 	const result = await tmdbSearch(query);
 
 	if (!result) {
-		return json([]);
+		return json([], {status: 500});
 	} else {
 
-		return json(result?.results ?? []);
+		return json(result?.results ?? [], {status: 201});
 	}
 
 };

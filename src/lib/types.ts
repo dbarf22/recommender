@@ -3,3 +3,8 @@ export type Post = {
 	description: string,
 	image_link: string
 }
+
+export type result = {
+	title: string,
+	poster_path: string,
+}
