@@ -45,6 +45,17 @@
 		}
 	}
 	
+	$effect(() => {
+		if (searchQuery.length < 3) {
+			searchResults = [];
+			return;
+		}
+		const timer = setTimeout(() => {
+			tmdbSearch();
+		}, 300)
+		return () => clearTimeout(timer)
+	})
+	
 </script>
 
 <svelte:head>
@@ -84,16 +95,6 @@
 						class="input w-full"
 						bind:value={searchQuery}
 					/>
-					{#if !searchQuery}
-						<button class="btn btn-disabled">Search</button>
-					{:else}
-						<button
-							class="btn"
-							onclick={() => {
-								tmdbSearch();
-							}}>Search</button
-						>
-					{/if}
 				</div>
 				{#if searchResults.length > 0}
 					<ul
