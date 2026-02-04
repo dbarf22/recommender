@@ -15,11 +15,11 @@
 <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3">
 	{#each data.posts as post}
 		<div class="card card-side h-64 bg-base-100 shadow-sm">
-			<figure class="h-full w-auto shrink-0 p-4">
+			<figure class="h-full shrink-0 p-4">
 				<img
 					src={post.image_link}
 					alt="Movie Poster"
-					class="h-full w-full rounded-md object-cover"
+					class="h-full w-auto rounded-md object-cover"
 				/>
 			</figure>
 			<div class="card-body overflow-hidden">

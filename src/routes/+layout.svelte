@@ -90,7 +90,7 @@
 				<option>A TV show</option>
 				<option>A book</option>&ndash;&gt;
 			</select>-->
-			<div class="relative group">
+			<div class="relative ">
 				<div class="flex flex-row gap-2">
 					<input
 						type="text"
@@ -102,7 +102,7 @@
 				{#if searchResults.length > 0}
 					<ul
 						class="absolute z-50 m-1 max-h-60 w-full overflow-scroll
-						hidden group-focus-within:block rounded-md border bg-base-200 p-2 shadow-lg"
+						 rounded-md border bg-base-200 p-2 shadow-lg"
 					>
 						{#each searchResults as result}
 							{@const posterUrl = result.poster_path
