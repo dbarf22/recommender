@@ -11,31 +11,34 @@
 	}
 </script>
 
-
-<div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3">
-	{#each data.posts as post}
-		<div class="card card-side h-64 bg-base-100 shadow-sm">
-			<figure class="h-full shrink-0 p-4">
-				<img
+{#snippet moviePost(post: post)}
+	<div class="card card-side h-64 bg-base-100 shadow-sm">
+		<figure class="h-full  shrink-0 p-4">
+			<img
 					src={post.image_link}
 					alt="Movie Poster"
-					class="h-full w-auto rounded-md object-cover"
-				/>
-			</figure>
-			<div class="card-body overflow-hidden">
-				<h2 class="card-title">{post.title}</h2>
-				<p class="line-clamp-6 overflow-hidden">{post.description}</p>
-				<div class="card-actions justify-end">
-					<p class="mt-auto text-xs italic">({post.type})</p>
-					<button
+					class="h-full w-full rounded-md object-cover aspect-2/3"
+			/>
+		</figure>
+		<div class="card-body overflow-hidden">
+			<h2 class="card-title">{post.title}</h2>
+			<p class="line-clamp-6 overflow-hidden">{post.description}</p>
+			<div class="card-actions justify-end">
+				<p class="mt-auto text-xs italic">({post.type})</p>
+				<button
 						class="btn btn-primary"
 						onclick={() => {
 							openContentModal(post);
 						}}>Open</button
-					>
-				</div>
+				>
 			</div>
 		</div>
+	</div>
+{/snippet}
+
+<div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3">
+	{#each data.posts as post}
+		{@render moviePost(post)}
 	{/each}
 
 	<dialog bind:this={contentModal} class="modal">

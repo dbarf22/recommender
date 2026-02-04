@@ -7,4 +7,5 @@ export type Post = {
 export type result = {
 	title: string,
 	poster_path: string,
+	id: number,
 }
