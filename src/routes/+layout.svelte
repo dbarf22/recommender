@@ -4,8 +4,17 @@
 	
 	let { children } = $props();
 	let searchQuery = $state("")
+	let searchResults = $state([])
 	let postModal: HTMLDialogElement | undefined = $state();
 
+	async function search() {
+		const response = await fetch(`/api/movies?query=${encodeURIComponent(searchQuery)}`)
+		if (response.ok) {
+			console.log(`/api/movies?query=${encodeURIComponent(searchQuery)}`)
+			searchResults = await response.json();
+		}
+	}
+	
 </script>
 
 <svelte:head>
@@ -35,15 +44,15 @@
 				<option>A book</option>-->
 			</select>
 			<div class="flex flex-row gap-2">
-				<input type="text" placeholder="Search a title" class="input w-full" bind:value={searchQuery}>
-				{#if !searchQuery}
-					<button class="btn btn-disabled" >Search</button>
-					{:else if searchQuery}
-					<button class="btn btn-disabled" >Search</button>
-				{:else}
-				{/if}
-				
+					<input type="text" placeholder="Search a title" class="input w-full" bind:value={searchQuery}>
+					{#if !searchQuery}
+						<button class="btn btn-disabled" >Search</button>
+					{:else}
+						<button class="btn" onclick="{ () => {search()} }">Search</button>
+					{/if}
 			</div>
+			
+			
 			
 			
 			<textarea class="textarea textarea-bordered w-full" placeholder="Write a recommendation"></textarea>

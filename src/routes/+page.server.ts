@@ -15,7 +15,7 @@ export const load: PageServerLoad = async () => {
 	const { data, error } = await supabase.from('posts').select<'posts', Recommendation>();
 	console.log("Done with await")
 	if (error) {
-		console.error('Error loading instruments:', error.message);
+		console.error('Error loading movies:', error.message);
 		return { posts: [] };
 	}
 	return {
