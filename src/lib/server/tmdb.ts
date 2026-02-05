@@ -1,16 +1,51 @@
-import { TMDB, TMDBError } from '@lorenzopant/tmdb';
+import { TMDB } from 'tmdb-ts';
 import { TMDB_API_KEY } from '$env/static/private';
 
 export const tmdbClient = new TMDB(TMDB_API_KEY);
 
+type searchResults = {
+	title: string,
+	poster_path: string,
+	id: number,
+	type: string
+}
+
 export async function tmdbSearch(searchTerm: string) {
 	try {
-		return await tmdbClient.search.movies({ query: searchTerm });
+		const results = await tmdbClient.search.movies({ query: searchTerm });
+
+		return results.results.map((item:any) => ({
+			title: item.title,
+			poster_path: 'https://image.tmdb.org/t/p/w500' + item.poster_path,
+			id: item.id,
+			type: 'movie'
+		}))
+
 	} catch (error) {
-		if (error instanceof TMDBError) {
-			console.error('TMDB Error:', error.message);
-			console.error('HTTP Status:', error.http_status_code);
-			console.error('TMDB Status Code:', error.tmdb_status_code);
+		if (error) {
+			console.error('TMDB Error:', error)
+		} else {
+			console.error('Unknown error:', error);
+		}
+	}
+}
+
+export async function tmdbShowSearch(searchTerm: string) {
+	try {
+		const results = await tmdbClient.search.tvShows({ query: searchTerm });
+		console.log(results.results);
+
+		return results.results.map((item: any) => ({
+			title: item.name,
+			poster_path: 'https://image.tmdb.org/t/p/w500' + item.poster_path,
+			id: item.id,
+			type: 'show'
+		}));
+
+
+	} catch (error) {
+		if (error) {
+			console.error('TMDB Error:', error)
 		} else {
 			console.error('Unknown error:', error);
 		}

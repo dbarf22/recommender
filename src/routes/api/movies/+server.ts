@@ -13,7 +13,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		return json([], {status: 500});
 	} else {
 
-		return json(result?.results ?? [], {status: 201});
+		return json(result, {status: 201});
 	}
 
 };
