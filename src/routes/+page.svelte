@@ -1,15 +1,29 @@
 <script lang="ts">
 	import type { Post } from '$lib/types';
-	
-	let { data } : {data: any, filter: string} = $props();
+
+	let { data }: { data: any; filter: string } = $props();
 	let selectedPost = $state<Post | null>(null);
 	let contentModal: HTMLDialogElement | undefined = $state();
+
+	let filter = $state('all');
 
 	function openContentModal(post: Post) {
 		selectedPost = post;
 		contentModal?.showModal();
 	}
 </script>
+
+<nav class="navbar justify-between shadow-sm">
+	<a class="btn text-xl btn-ghost" href="/">Recommender</a>
+	<div class="flex flex-row items-center gap-2">
+		<label for="filterMenu">Filters: </label>
+		<select id="filterMenu" class="select" bind:value={filter}>
+			<option selected value="all">Show all</option>
+			<option value="movie">Movies</option>
+			<option value="show">TV Shows</option>
+		</select>
+	</div>
+</nav>
 
 {#snippet moviePost(post: post)}
 	<div class="card card-side h-64 bg-base-100 shadow-sm">
@@ -38,7 +52,11 @@
 
 <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3">
 	{#each data.posts as post}
-		{@render moviePost(post)}
+
+		{#if filter === 'all' || post.type === filter}
+				{@render moviePost(post)}
+		{/if}
+			
 	{/each}
 
 	<dialog bind:this={contentModal} class="modal">
