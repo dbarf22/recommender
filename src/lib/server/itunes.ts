@@ -1,5 +1,4 @@
 import { searchItunes } from 'node-itunes-search/dist/mod';
-import { LastFMAlbum} from 'lastfm-ts-api';
 
 
 export async function itunesSearch(query: string) {

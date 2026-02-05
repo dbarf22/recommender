@@ -1,7 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { itunesSearch } from '$lib/server/itunes';
-import { lastfmSearch } from '$lib/server/lastfm';
 
 export const GET: RequestHandler = async ({ url }) => {
 	const query = url.searchParams.get('query');

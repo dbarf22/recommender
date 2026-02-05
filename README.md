@@ -44,3 +44,4 @@ You can preview the production build with `npm run preview`.
 ## Credits
 
 TMDB API: https://github.com/leandrowkz/tmdb
+Node-itunes-search: https://github.com/jacob-shuman/node-itunes-search
