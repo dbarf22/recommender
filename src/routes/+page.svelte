@@ -28,15 +28,17 @@
 
 {#snippet moviePost(post: post)}
 	<div class="card card-side h-64 bg-base-100 shadow-sm">
-		<figure class="h-full shrink-0 p-4 hover:scale-105 transition-transform">
-			<img
-				src={post.image_link}
-				alt="Movie Poster"
-				class="h-full w-auto object-contain rounded-md object-cover"
-			/>
+		<figure class="h-full w-1/3 shrink-0 p-4 hover:scale-105 transition-transform">
+			<div class="rounded-md h-auto shadow-sm">
+				<img
+						src={post.image_link}
+						alt="Movie Poster"
+						class="h-full w-full object-contain rounded-md "
+				/>
+			</div>
 		</figure>
 		<div class="card-body overflow-hidden">
-			<h2 class="card-title">{post.title}</h2>
+			<h2 class="card-title line-clamp-2 text-sm lg:text-lg">{post.title}</h2>
 			<p class="line-clamp-6 overflow-hidden">{post.description}</p>
 			<div class="card-actions justify-end">
 				<p class="mt-auto text-xs italic">({post.type})</p>
