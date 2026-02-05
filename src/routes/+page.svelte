@@ -21,17 +21,18 @@
 			<option selected value="all">Show all</option>
 			<option value="movie">Movies</option>
 			<option value="show">TV Shows</option>
+			<option value="album">Albums</option>
 		</select>
 	</div>
 </nav>
 
 {#snippet moviePost(post: post)}
 	<div class="card card-side h-64 bg-base-100 shadow-sm">
-		<figure class="h-full shrink-0 p-4">
+		<figure class="h-full shrink-0 p-4 hover:scale-105 transition-transform">
 			<img
 				src={post.image_link}
 				alt="Movie Poster"
-				class="aspect-2/3 h-full w-full rounded-md object-cover"
+				class="h-full w-auto object-contain rounded-md object-cover"
 			/>
 		</figure>
 		<div class="card-body overflow-hidden">
@@ -52,7 +53,6 @@
 
 <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3">
 	{#each data.posts as post}
-
 		{#if filter === 'all' || post.type === filter}
 				{@render moviePost(post)}
 		{/if}

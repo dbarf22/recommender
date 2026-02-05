@@ -16,7 +16,7 @@ export async function tmdbSearch(searchTerm: string) {
 
 		return results.results.map((item:any) => ({
 			title: item.title,
-			poster_path: item.poster_path,
+			poster_path: 'https://image.tmdb.org/t/p/w500' + item.poster_path,
 			id: item.id,
 			type: 'movie'
 		}))
@@ -35,12 +35,12 @@ export async function tmdbShowSearch(searchTerm: string) {
 		const results = await tmdbClient.search.tvShows({ query: searchTerm });
 		console.log(results.results);
 
-		return results.results.map((item:any) => ({
+		return results.results.map((item: any) => ({
 			title: item.name,
-			poster_path: item.poster_path,
+			poster_path: 'https://image.tmdb.org/t/p/w500' + item.poster_path,
 			id: item.id,
 			type: 'show'
-		}))
+		}));
 
 
 	} catch (error) {

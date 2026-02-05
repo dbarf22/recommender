@@ -30,6 +30,8 @@
 	},
 	"dependencies": {
 		"@supabase/supabase-js": "^2.94.0",
+		"lastfm-ts-api": "^2.6.0",
+		"node-itunes-search": "^3.0.0",
 		"tmdb-ts": "^2.2.0"
 	}
 }

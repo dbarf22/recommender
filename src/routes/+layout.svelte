@@ -12,14 +12,16 @@
 
 	/*State declarations*/
 	let searchQuery = $state('');
-	let searchType = $state('');
+	let searchType = $state('movie');
 	let searchResults = $state<result[]>([]);
 	let postModal = $state<HTMLDialogElement>();
 	let isSubmitting = $state(false);
 	let searchController: AbortController | null = null;
+	
+	let searchIsFocused = $state(false)
 
 	/*Derived declarations*/
-	let showSearchResults = $derived(searchResults.length > 0);
+	let showSearchResults = $derived(searchResults.length > 0 && searchIsFocused);
 
 	/*Normal variable declarations*/
 	let post: Post = $state({
@@ -65,7 +67,25 @@
 				});
 				if (response.ok) {
 					searchResults = await response.json();
-					console.log(searchResults)
+				}
+			} catch (error) {
+				if (error.name !== 'AbortError') {
+					console.error(error);
+				}
+			}
+		} else if (searchType === 'album') {
+			if (searchController) {
+				searchController.abort();
+			}
+			
+			searchController = new AbortController();
+			
+			try {
+				const response = await fetch(`/api/albums?query=${encodeURIComponent(searchQuery)}`, {
+					signal: searchController.signal
+				});
+				if (response.ok) {
+					searchResults = await response.json();
 				}
 			} catch (error) {
 				if (error.name !== 'AbortError') {
@@ -76,14 +96,9 @@
 	}
 
 	function updatePostInformation(result: result) {
-		let url = 'https://image.tmdb.org/t/p/w500'
-		if (result.type === 'movie' || result.type === 'show') {
-			const url = "https://image.tmdb.org/t/p/w500"
-		}
 		post.title = result.title;
 		post.type = result.type;
-		console.log(post.type)
-		post.image_link = url + result.poster_path;
+		post.image_link = result.poster_path;
 		searchResults = [];
 		searchQuery = result.title;
 		selectedTitle = result.title;
@@ -107,7 +122,7 @@
 
 {#snippet searchResult(result: result)}
 	{@const posterUrl = result.poster_path
-		? `https://image.tmdb.org/t/p/w500${result.poster_path}`
+		? result.poster_path
 		: 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg'}
 	<li>
 		<button
@@ -169,7 +184,6 @@
 					<option value="movie">Movie</option>
 					<option value="album">Album</option>
 					<option value="show">TV Show</option>
-					<option value="book">Book</option>
 				</select>
 
 				{#if form?.error}
@@ -185,6 +199,8 @@
 							placeholder="Search a title"
 							class="input w-full"
 							bind:value={searchQuery}
+							onfocus="{() => searchIsFocused = true}"
+							onblur={() => {setTimeout(() => searchIsFocused = false, 200);}}
 						/>
 					</div>
 					{#if showSearchResults}
