@@ -13,7 +13,7 @@
 	}
 </script>
 
-<nav class="navbar justify-between shadow-sm">
+<nav class="navbar justify-between shadow-sm bg-base-200">
 	<a class="btn text-xl btn-ghost" href="/">Recommender</a>
 	<div class="flex flex-row items-center gap-2">
 		<label for="filterMenu">Filters: </label>
@@ -27,15 +27,13 @@
 </nav>
 
 {#snippet moviePost(post: post)}
-	<div class="card card-side h-64 bg-base-100 shadow-sm">
-		<figure class="h-full w-1/3 shrink-0 p-4 hover:scale-105 transition-transform">
-			<div class="rounded-md h-auto shadow-sm">
-				<img
-						src={post.image_link}
-						alt="Movie Poster"
-						class="h-full w-full object-contain rounded-md "
-				/>
-			</div>
+	<div class="card card-side h-64 bg-base-200 shadow-sm">
+		<figure class="h-full w-1/3 shrink-0 p-4 hover:scale-105 transition-transform flex items-center justify-center">
+			<img
+					src={post.image_link}
+					alt="Movie Poster"
+			class="max-h-full max-w-full w-auto h-auto rounded-md shadow-sm"
+			/>
 		</figure>
 		<div class="card-body overflow-hidden">
 			<h2 class="card-title line-clamp-2 text-sm lg:text-lg">{post.title}</h2>
@@ -43,16 +41,15 @@
 			<div class="card-actions justify-end">
 				<p class="mt-auto text-xs italic">({post.type})</p>
 				<button
-					class="btn btn-primary"
-					onclick={() => {
-						openContentModal(post);
-					}}>Open</button
+						class="btn btn-neutral"
+						onclick={() => {
+                   openContentModal(post);
+                }}>Open</button
 				>
 			</div>
 		</div>
 	</div>
 {/snippet}
-
 <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-3">
 	{#each data.posts as post}
 		{#if filter === 'all' || post.type === filter}
