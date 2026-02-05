@@ -6,12 +6,13 @@
 
 	/*prop declarations */
 	let { children, form } = $props() as {
-		form?: any,
-		children?: any
+		form?: any;
+		children?: any;
 	};
 
 	/*State declarations*/
 	let searchQuery = $state('');
+	let searchType = $state('');
 	let searchResults = $state<result[]>([]);
 	let postModal = $state<HTMLDialogElement>();
 	let isSubmitting = $state(false);
@@ -25,34 +26,63 @@
 		title: '',
 		description: '',
 		image_link: '',
-		type: 'movie'
+		type: ''
 	});
 
 	let selectedTitle = '';
 
 	/*Function declarations*/
-	async function tmdbSearch() {
-		
-		if (searchController) {
-			searchController.abort();
-		}
-		
-		searchController = new AbortController();
-		
-		try {const response = await fetch(`/api/movies?query=${encodeURIComponent(searchQuery)}`,
-				{ signal: searchController.signal});
-			if (response.ok) {
-				searchResults = await response.json();
-			} } catch (error) {
-			if (erorr.name!== 'AbortError') {
-				console.error(error);
+	async function search() {
+		if (searchType === 'movie') {
+			if (searchController) {
+				searchController.abort();
+			}
+
+			searchController = new AbortController();
+
+			try {
+				const response = await fetch(`/api/movies?query=${encodeURIComponent(searchQuery)}`, {
+					signal: searchController.signal
+				});
+				if (response.ok) {
+					searchResults = await response.json();
+				}
+			} catch (error) {
+				if (error.name !== 'AbortError') {
+					console.error(error);
+				}
+			}
+		} else if (searchType === 'show') {
+			if (searchController) {
+				searchController.abort();
+			}
+			
+			searchController = new AbortController();
+			
+			try {
+				const response = await fetch(`/api/shows?query=${encodeURIComponent(searchQuery)}`, {
+					signal: searchController.signal
+				});
+				if (response.ok) {
+					searchResults = await response.json();
+					console.log(searchResults)
+				}
+			} catch (error) {
+				if (error.name !== 'AbortError') {
+					console.error(error);
+				}
 			}
 		}
 	}
 
-	function updatePostInformation(result: result, type: string) {
-		const url = type === 'movie' ? 'https://image.tmdb.org/t/p/w500' : '';
+	function updatePostInformation(result: result) {
+		let url = 'https://image.tmdb.org/t/p/w500'
+		if (result.type === 'movie' || result.type === 'show') {
+			const url = "https://image.tmdb.org/t/p/w500"
+		}
 		post.title = result.title;
+		post.type = result.type;
+		console.log(post.type)
 		post.image_link = url + result.poster_path;
 		searchResults = [];
 		searchQuery = result.title;
@@ -69,13 +99,13 @@
 			return;
 		}
 		const timer = setTimeout(() => {
-			tmdbSearch();
+			search();
 		}, 300);
 		return () => clearTimeout(timer);
 	});
 </script>
 
-{#snippet movieResult(result: result)}
+{#snippet searchResult(result: result)}
 	{@const posterUrl = result.poster_path
 		? `https://image.tmdb.org/t/p/w500${result.poster_path}`
 		: 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg'}
@@ -84,7 +114,7 @@
 			type="button"
 			class="flex min-w-full cursor-pointer flex-row items-center text-left hover:bg-base-300"
 			onclick={() => {
-				updatePostInformation(result, 'movie');
+				updatePostInformation(result);
 			}}
 		>
 			<img src={posterUrl} loading="lazy" alt={result.title} class="w-16 rounded-md p-2" />
@@ -127,7 +157,7 @@
 							title: '',
 							description: '',
 							image_link: '',
-							type: 'movie'
+							type: ''
 						};
 						searchQuery = '';
 						selectedTitle = '';
@@ -139,13 +169,13 @@
 		>
 			<div class="flex min-h-[70vh] flex-col gap-4 xl:min-h-[60vh]">
 				<h3 class="text-lg font-bold">Enter a recommendation</h3>
-				<!--<select class="select w-full">
-				<option disabled selected>What are you recommending?</option>
-				<option>A movie</option>
-				&lt;!&ndash;<option>An album</option>
-				<option>A TV show</option>
-				<option>A book</option>&ndash;&gt;
-			</select>-->
+				<select class="select w-full" bind:value={searchType}>
+					<option disabled selected>What are you recommending?</option>
+					<option value="movie">Movie</option>
+					<option value="album">Album</option>
+					<option value="show">TV Show</option>
+					<option value="book">Book</option>
+				</select>
 
 				{#if form?.error}
 					<div class="alert alert-error" role="alert">
@@ -168,7 +198,7 @@
 						 rounded-md border bg-base-200 p-2 shadow-lg"
 						>
 							{#each searchResults as result (result.id)}
-								{@render movieResult(result)}
+								{@render searchResult(result)}
 							{/each}
 						</ul>
 					{/if}
@@ -195,12 +225,14 @@
 						postModal?.close();
 					}}>Cancel</button
 				>
-				<button disabled={isSubmitting || !post.title || !post.description} class="btn btn-primary" type="submit"
-					>{isSubmitting ? 'Submitting' : 'Submit'}</button
+				<button
+					disabled={isSubmitting || !post.title || !post.description}
+					class="btn btn-primary"
+					type="submit">{isSubmitting ? 'Submitting' : 'Submit'}</button
 				>
 			</div>
 		</form>
 	</div>
 </dialog>
 
-{@render children()}
+{@render children() }

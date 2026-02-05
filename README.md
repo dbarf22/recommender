@@ -43,4 +43,4 @@ You can preview the production build with `npm run preview`.
 
 ## Credits
 
-TMDB API : https://github.com/lorenzopant/tmdb
+TMDB API: https://github.com/leandrowkz/tmdb

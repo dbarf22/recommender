@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Post } from '$lib/types';
-
-	let { data } = $props();
+	
+	let { data } : {data: any, filter: string} = $props();
 	let selectedPost = $state<Post | null>(null);
 	let contentModal: HTMLDialogElement | undefined = $state();
 
