@@ -13,7 +13,7 @@ type Recommendation = {
 };
 
 export const load: PageServerLoad = async () => {
-	const { data, error } = await supabase.from('posts').select<'posts', Recommendation>();
+	const { data, error } = await supabase.from('posts').select<'posts', Recommendation>().order('id',{ascending: false});
 	if (error) {
 		console.error('Error loading movies:', error.message);
 		return { posts: [] };
