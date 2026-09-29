@@ -1,6 +1,6 @@
 # Recommender
 
-A personal media recommendation board built with SvelteKit. Browse and filter movie, TV show, album, and book recommendations in a card-based UI, backed by Supabase for storage and TMDB / iTunes for media lookups.
+A prototype personal media recommendation board built with SvelteKit. Browse and filter movie, TV show, album, and book recommendations in a card-based UI, backed by Supabase for storage and TMDB / iTunes for media lookups.
 
 ## Features
 
@@ -9,6 +9,12 @@ A personal media recommendation board built with SvelteKit. Browse and filter mo
 - Detail modal for each recommendation
 - Server-side search integration with TMDB (movies, shows) and iTunes (albums)
 - Supabase-backed persistence for posts
+
+## Images
+
+![album-lookup.png](assets/album-lookup.png)
+![homepage.png](assets/homepage.png)
+![movie-lookup.png](assets/movie-lookup.png)
 
 ## Tech Stack
 
