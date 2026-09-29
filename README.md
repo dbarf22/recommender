@@ -1,5 +1,7 @@
 # Recommender
 
+Available live at: https://dbarf22-recommender.vercel.app
+
 A prototype personal media recommendation board built with SvelteKit. Browse and filter movie, TV show, album, and book recommendations in a card-based UI, backed by Supabase for storage and TMDB / iTunes for media lookups.
 
 ## Features
